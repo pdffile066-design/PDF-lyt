@@ -1495,26 +1495,6 @@
             });
         });
 
-        // Tool click handler
-        document.querySelectorAll('.tool-item').forEach(tool => {
-            tool.addEventListener('click', function(e) {
-                e.preventDefault();
-                const toolName = this.getAttribute('data-tool');
-                handleToolClick(toolName);
-            });
-        });
-
-        function handleToolClick(toolName) {
-            // This is where you would handle tool navigation
-            // For now, we'll show a placeholder message
-            console.log(`Tool clicked: ${toolName}`);
-            
-            // You can redirect to specific tool pages or show a modal
-            // Example: window.location.href = `/tools/${toolName}`;
-            
-            // For demo purposes, show an alert
-            alert(`${toolName.replace('-', ' ').toUpperCase()} tool will be implemented here. You can create separate pages for each tool.`);
-        }
 
         // Add scroll effect to header
         window.addEventListener('scroll', () => {
