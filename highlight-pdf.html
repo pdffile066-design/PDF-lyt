@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Highlight text in your PDF documents online for free. Emphasize important sections with an easy-to-use PDF highlighter tool by PDFlyt.">
+    <meta name="keywords" content="Highlight PDF, PDF Highlighter, Annotate PDF, Mark up PDF, PDFlyt">
+    
+    <title>Highlight PDF | PDFlyt - Highlight PDF Text Online</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js`;
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #6366F1; --primary-dark: #4F46E5; --success-color: #10B981; --danger-color: #EF4444;
+            --highlight-color: rgba(255, 255, 0, 0.4); /* Yellow highlight color */
+            --light-bg: #F8FAFC; --white: #FFFFFF; --gray-50: #F3F4F6; --gray-100: #E5E7EB; --gray-200: #D1D5DB;
+            --gray-600: #4B5563; --gray-800: #1F2937; --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25); --border-radius: 16px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--gray-800); }
+        .header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.5rem; }
+        .logo-text { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .nav-menu { display: flex; list-style: none; gap: 2.5rem; }
+        .nav-link { text-decoration: none; color: var(--gray-600); font-weight: 600; font-size: 0.95rem; }
+        .main-content { padding: 4rem 2rem; }
+        .tool-container { max-width: 900px; margin: 0 auto; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow-2xl); padding: 2.5rem; border: 1px solid var(--gray-100); text-align: center; }
+        .tool-header { margin-bottom: 2rem; }
+        .tool-icon-large { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2.5rem; margin: 0 auto 1.5rem; box-shadow: var(--shadow-lg); }
+        .tool-title { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem; }
+        .tool-description { font-size: 1.1rem; color: var(--gray-600); max-width: 650px; margin: 0 auto; }
+        .upload-area { border: 3px dashed var(--gray-200); border-radius: var(--border-radius); padding: 3rem 2rem; background-color: #F9FAFB; transition: var(--transition); cursor: pointer; }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary-color); background-color: #f4f4ff; }
+        .upload-icon { font-size: 3.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        #file-input { display: none; }
+        
+        #highlight-interface { display: none; }
+        #preview-container { position: relative; width: 100%; max-width: 800px; margin: 1.5rem auto; background: var(--gray-50); border: 1px solid var(--gray-200); user-select: none; }
+        #pdf-canvas { width: 100%; height: auto; display: block; }
+        #highlight-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+        #page-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+        #page-controls button { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
+        #page-indicator { font-weight: 600; }
+        #clear-highlights-btn { color: var(--danger-color); }
+        
+        .action-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: var(--white); padding: 1rem 2.5rem; border-radius: 14px; text-decoration: none; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-lg); margin-top: 2rem; }
+        .action-button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4); }
+        .processing-state, .success-state { display: none; padding: 3rem 0; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--gray-200); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success-icon { font-size: 4rem; color: var(--success-color); margin-bottom: 1.5rem; }
+        .download-button { background: var(--success-color); font-size: 1.1rem; padding: 1rem 2.5rem; border-radius: 14px; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+        .start-over-button { background: none; border: 2px solid var(--gray-200); color: var(--gray-800); margin-left: 1rem; }
+        
+        .about-tool { padding: 4rem 2rem; background: linear-gradient(to bottom, var(--white), var(--gray-50)); margin-top: 4rem; }
+        .about-tool-content { max-width: 800px; margin: 0 auto; text-align: left; }
+        .about-tool-content h2 { font-family: 'Poppins', sans-serif; font-size: 2rem; text-align: center; margin-bottom: 2rem; }
+        .about-tool-content h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .about-tool-content p, .about-tool-content li { color: var(--gray-600); }
+        .about-tool-content ul { list-style-position: inside; padding-left: 1rem; }
+        
+        .footer { background: #0F172A; color: white; padding: 5rem 2rem 1rem; text-align: center; }
+        
+        @media (max-width: 768px) {
+            .tool-container { padding: 1.5rem; }
+            .tool-title { font-size: 2rem; }
+            .action-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-file-pdf"></i></div>
+                <div><div class="logo-text">PDFlyt</div></div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#pdf-tools" class="nav-link">PDF Tools</a></li>
+                <li><a href="index.html#image-tools" class="nav-link">Image Tools</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="tool-container">
+            <div id="upload-state">
+                <div class="tool-header">
+                    <div class="tool-icon-large"><i class="fas fa-highlighter"></i></div>
+                    <h1 class="tool-title">Highlight PDF</h1>
+                    <p class="tool-description">Visually select and highlight text in your PDF documents, just like using a real marker pen. Perfect for studying and reviewing.</p>
+                </div>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>Drag & Drop a PDF Here</h3>
+                    <p>or <span style="color:var(--primary-color); font-weight: 600;">Browse File</span></p>
+                    <input type="file" id="file-input" accept=".pdf">
+                </div>
+            </div>
+
+            <div id="highlight-interface">
+                <div id="preview-container">
+                    <canvas id="pdf-canvas"></canvas>
+                    <canvas id="highlight-canvas"></canvas>
+                </div>
+                <div id="page-controls">
+                    <button id="prev-page"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <span id="page-indicator">Page 1 / 1</span>
+                    <button id="clear-highlights-btn">Clear Page <i class="fas fa-trash"></i></button>
+                    <button id="next-page">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+                <button class="action-button" id="apply-button">
+                    <i class="fas fa-magic"></i> Apply Highlights
+                </button>
+            </div>
+
+            <div class="processing-state" id="processing-state">
+                <div class="spinner"></div><h2 class="tool-title">Applying Highlights...</h2>
+            </div>
+
+            <div class="success-state" id="success-state">
+                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="tool-title">PDF Highlighted Successfully!</h2>
+                <a href="#" class="download-button" id="download-button" download="highlighted.pdf"><i class="fas fa-download"></i> Download Highlighted PDF</a>
+                <button class="action-button start-over-button" id="start-over-button"><i class="fas fa-redo"></i> Start Over</button>
+            </div>
+        </div>
+    </main>
+    
+    <section class="about-tool">
+        <div class="about-tool-content">
+            <h2>About the Highlight PDF Tool</h2>
+            <h3>What is PDF Highlighting?</h3>
+            <p>PDF highlighting is the process of marking important text or sections within a PDF document with a semi-transparent color, typically yellow. It's a digital way to mimic the real-world action of using a highlighter pen to draw attention to key information, making documents easier to study and review.</p>
+            <h3>Why Highlight a PDF?</h3>
+            <ul>
+                <li><strong>Studying and Research:</strong> Easily mark key facts, figures, and arguments for future reference.</li>
+                <li><strong>Collaboration:</strong> Point out important sections to colleagues when reviewing a document together.</li>
+                <li><strong>Quick Summaries:</strong> By highlighting main points, you can quickly scan a document later to get its gist.</li>
+                <li><strong>Digital and Eco-Friendly:</strong> Avoid printing long documents just to mark them up.</li>
+            </ul>
+            <h3>Is This Tool Secure?</h3>
+            <p>Absolutely. Your security is our priority. The entire highlighting process happens directly in your web browser. Your PDF files are never uploaded to our servers, ensuring your data remains private and secure on your own device.</p>
+        </div>
+    </section>
+
+    <footer class="footer"><p>&copy; 2024 PDFlyt. All rights reserved.</p></footer>
+
+    <script>
+        const uploadState = document.getElementById('upload-state');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const highlightInterface = document.getElementById('highlight-interface');
+        const processingState = document.getElementById('processing-state');
+        const successState = document.getElementById('success-state');
+        const applyButton = document.getElementById('apply-button');
+        const downloadButton = document.getElementById('download-button');
+        const startOverButton = document.getElementById('start-over-button');
+        
+        const pdfCanvas = document.getElementById('pdf-canvas');
+        const highlightCanvas = document.getElementById('highlight-canvas');
+        const htx = highlightCanvas.getContext('2d');
+
+        let pdfDoc = null, pageNum = 1, fileBuffer = null, originalFileName = '';
+        let highlights = {}; // Store highlights per page: { 1: [rect1, rect2], 2: [rect3] }
+        let isDrawing = false, currentRect = {};
+
+        // --- File Upload Logic ---
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please upload a valid PDF file.');
+                return;
+            }
+            originalFileName = file.name;
+            fileBuffer = await file.arrayBuffer();
+            uploadState.style.display = 'none';
+            highlightInterface.style.display = 'block';
+            loadPdf(fileBuffer);
+        }
+
+        async function loadPdf(data) {
+            try {
+                pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+                pageNum = 1;
+                renderPage(pageNum);
+            } catch(error) {
+                alert("Could not load PDF. It might be password-protected or corrupted.");
+                resetTool();
+            }
+        }
+
+        async function renderPage(num) {
+            const page = await pdfDoc.getPage(num);
+            const containerWidth = document.getElementById('preview-container').clientWidth;
+            const viewport = page.getViewport({ scale: 1 });
+            const scale = containerWidth / viewport.width;
+            const scaledViewport = page.getViewport({ scale });
+            
+            const context = pdfCanvas.getContext('2d');
+            pdfCanvas.height = scaledViewport.height;
+            pdfCanvas.width = scaledViewport.width;
+            highlightCanvas.height = scaledViewport.height;
+            highlightCanvas.width = scaledViewport.width;
+
+            await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+            
+            document.getElementById('page-indicator').textContent = `Page ${num} / ${pdfDoc.numPages}`;
+            drawHighlightsForPage(num);
+        }
+
+        // --- Highlighting Logic ---
+        highlightCanvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            const rect = highlightCanvas.getBoundingClientRect();
+            currentRect.startX = e.clientX - rect.left;
+            currentRect.startY = e.clientY - rect.top;
+        });
+
+        highlightCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const rect = highlightCanvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            htx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
+            drawHighlightsForPage(pageNum); // Redraw existing highlights
+            
+            htx.fillStyle = 'rgba(255, 255, 0, 0.4)';
+            htx.fillRect(currentRect.startX, currentRect.startY, currentX - currentRect.startX, currentY - currentRect.startY);
+        });
+
+        highlightCanvas.addEventListener('mouseup', (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+            const rect = highlightCanvas.getBoundingClientRect();
+            currentRect.endX = e.clientX - rect.left;
+            currentRect.endY = e.clientY - rect.top;
+            
+            const newHighlight = {
+                x: Math.min(currentRect.startX, currentRect.endX),
+                y: Math.min(currentRect.startY, currentRect.endY),
+                width: Math.abs(currentRect.startX - currentRect.endX),
+                height: Math.abs(currentRect.startY - currentRect.endY)
+            };
+
+            if (newHighlight.width > 5 && newHighlight.height > 5) {
+                if (!highlights[pageNum]) highlights[pageNum] = [];
+                highlights[pageNum].push(newHighlight);
+            }
+            drawHighlightsForPage(pageNum);
+        });
+
+        function drawHighlightsForPage(num) {
+            htx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
+            const pageHighlights = highlights[num] || [];
+            htx.fillStyle = 'rgba(255, 255, 0, 0.4)';
+            pageHighlights.forEach(rect => {
+                htx.fillRect(rect.x, rect.y, rect.width, rect.height);
+            });
+        }
+
+        // --- Page Navigation and Controls ---
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum--;
+            renderPage(pageNum);
+        });
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            renderPage(pageNum);
+        });
+        document.getElementById('clear-highlights-btn').addEventListener('click', () => {
+            highlights[pageNum] = [];
+            drawHighlightsForPage(pageNum);
+        });
+
+        // --- Main Apply Logic (pdf-lib) ---
+        applyButton.addEventListener('click', async () => {
+            highlightInterface.style.display = 'none';
+            processingState.style.display = 'block';
+
+            try {
+                const { PDFDocument, rgb, opacity } = PDFLib;
+                const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+                const pages = pdf.getPages();
+                
+                for (const pageNumStr in highlights) {
+                    const pageNum = parseInt(pageNumStr);
+                    const page = pages[pageNum - 1];
+                    const pageHighlights = highlights[pageNum];
+                    const { width: origWidth, height: origHeight } = page.getSize();
+                    const scaleX = origWidth / pdfCanvas.width;
+                    const scaleY = origHeight / pdfCanvas.height;
+                    
+                    pageHighlights.forEach(rect => {
+                        page.drawRectangle({
+                            x: rect.x * scaleX,
+                            y: origHeight - (rect.y + rect.height) * scaleY, // Invert Y-axis
+                            width: rect.width * scaleX,
+                            height: rect.height * scaleY,
+                            color: rgb(1, 1, 0), // Yellow
+                            opacity: 0.4
+                        });
+                    });
+                }
+
+                const newPdfBytes = await pdf.save();
+                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+                const downloadUrl = URL.createObjectURL(blob);
+
+                downloadButton.href = downloadUrl;
+                downloadButton.download = `highlighted-${originalFileName}`;
+                
+                processingState.style.display = 'none';
+                successState.style.display = 'block';
+            } catch (error) {
+                console.error("Highlighting failed:", error);
+                alert('An error occurred. Please try again.');
+                resetTool();
+            }
+        });
+        
+        // --- Reset Logic ---
+        startOverButton.addEventListener('click', resetTool);
+        
+        function resetTool() {
+            pdfDoc = null; pageNum = 1; fileBuffer = null; highlights = {};
+            successState.style.display = 'none';
+            processingState.style.display = 'none';
+            highlightInterface.style.display = 'none';
+            uploadState.style.display = 'block';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>
