@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Remove password and security restrictions from your PDF files online. Unlock your protected PDF documents for free with PDFlyt's secure tool.">
+    <meta name="keywords" content="Unlock PDF, PDF Unlocker, Remove PDF Password, PDF Security Remover, PDFlyt">
+    
+    <title>Unlock PDF | PDFlyt - Remove Password from PDF Online</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #6366F1; --primary-dark: #4F46E5; --success-color: #10B981; --danger-color: #EF4444;
+            --light-bg: #F8FAFC; --white: #FFFFFF; --gray-50: #F3F4F6; --gray-100: #E5E7EB; --gray-200: #D1D5DB;
+            --gray-600: #4B5563; --gray-800: #1F2937; --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25); --border-radius: 16px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--gray-800); }
+        .header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.5rem; }
+        .logo-text { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .nav-menu { display: flex; list-style: none; gap: 2.5rem; }
+        .nav-link { text-decoration: none; color: var(--gray-600); font-weight: 600; font-size: 0.95rem; }
+        .main-content { padding: 4rem 2rem; }
+        .tool-container { max-width: 900px; margin: 0 auto; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow-2xl); padding: 2.5rem; border: 1px solid var(--gray-100); text-align: center; }
+        .tool-header { margin-bottom: 2rem; }
+        .tool-icon-large { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2.5rem; margin: 0 auto 1.5rem; box-shadow: var(--shadow-lg); }
+        .tool-title { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem; }
+        .tool-description { font-size: 1.1rem; color: var(--gray-600); max-width: 650px; margin: 0 auto; }
+        .upload-area { border: 3px dashed var(--gray-200); border-radius: var(--border-radius); padding: 3rem 2rem; background-color: #F9FAFB; transition: var(--transition); cursor: pointer; }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary-color); background-color: #f4f4ff; }
+        .upload-icon { font-size: 3.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        #file-input { display: none; }
+        
+        #unlock-interface { display: none; text-align: left; }
+        .file-display { display: flex; align-items: center; gap: 1rem; background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
+        .file-display i { font-size: 1.5rem; color: var(--primary-color); }
+        .file-display-name { font-weight: 600; flex-grow: 1; }
+        .password-section { margin-top: 1.5rem; }
+        .password-label { font-weight: 600; margin-bottom: 0.5rem; display: block; }
+        .password-input { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 1rem; }
+        .password-input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        .error-message { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; display: none; }
+        
+        .action-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: var(--white); padding: 1rem 2.5rem; border-radius: 14px; text-decoration: none; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-lg); margin-top: 2rem; }
+        .action-button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4); }
+        .action-button:disabled { background: var(--gray-200); cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        .processing-state, .success-state { display: none; padding: 3rem 0; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--gray-200); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success-icon { font-size: 4rem; color: var(--success-color); margin-bottom: 1.5rem; }
+        .download-button { background: var(--success-color); font-size: 1.1rem; padding: 1rem 2.5rem; border-radius: 14px; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+        .start-over-button { background: none; border: 2px solid var(--gray-200); color: var(--gray-800); margin-left: 1rem; }
+        .footer { background: #0F172A; color: white; padding: 5rem 2rem 1rem; text-align: center; margin-top: 4rem; }
+        
+        @media (max-width: 768px) {
+            .tool-container { padding: 1.5rem; }
+            .tool-title { font-size: 2rem; }
+            .action-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-file-pdf"></i></div>
+                <div><div class="logo-text">PDFlyt</div></div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#pdf-tools" class="nav-link">PDF Tools</a></li>
+                <li><a href="index.html#image-tools" class="nav-link">Image Tools</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="tool-container">
+            <div id="upload-state">
+                <div class="tool-header">
+                    <div class="tool-icon-large"><i class="fas fa-unlock-alt"></i></div>
+                    <h1 class="tool-title">Unlock PDF File</h1>
+                    <p class="tool-description">Remove the password from your protected PDF files. Upload your file and enter the password to get an unlocked version.</p>
+                </div>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>Drag & Drop a PDF Here</h3>
+                    <p>or <span style="color:var(--primary-color); font-weight: 600;">Browse File</span></p>
+                    <input type="file" id="file-input" accept=".pdf">
+                </div>
+            </div>
+
+            <div id="unlock-interface">
+                <div class="file-display">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="file-display-name" id="file-display-name"></span>
+                </div>
+                <p>This file is password protected. Please provide the password to unlock it.</p>
+                <div class="password-section">
+                    <label for="password-input" class="password-label">Password</label>
+                    <input type="password" id="password-input" class="password-input" placeholder="Enter password here">
+                    <div class="error-message" id="error-message">Incorrect password. Please try again.</div>
+                </div>
+                <button class="action-button" id="unlock-button">
+                    <i class="fas fa-unlock-alt"></i> Unlock PDF
+                </button>
+            </div>
+
+            <div class="processing-state" id="processing-state">
+                <div class="spinner"></div><h2 class="tool-title">Unlocking PDF...</h2>
+            </div>
+
+            <div class="success-state" id="success-state">
+                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="tool-title">PDF Unlocked Successfully!</h2>
+                <a href="#" class="download-button" id="download-button" download="unlocked.pdf"><i class="fas fa-download"></i> Download Unlocked PDF</a>
+                <button class="action-button start-over-button" id="start-over-button"><i class="fas fa-redo"></i> Start Over</button>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer"><p>&copy; 2024 PDFlyt. All rights reserved.</p></footer>
+
+    <script>
+        const uploadState = document.getElementById('upload-state');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const unlockInterface = document.getElementById('unlock-interface');
+        const processingState = document.getElementById('processing-state');
+        const successState = document.getElementById('success-state');
+        const unlockButton = document.getElementById('unlock-button');
+        const passwordInput = document.getElementById('password-input');
+        const errorMessage = document.getElementById('error-message');
+        const downloadButton = document.getElementById('download-button');
+        const startOverButton = document.getElementById('start-over-button');
+        const fileDisplayName = document.getElementById('file-display-name');
+
+        let fileBuffer = null, originalFileName = '';
+
+        // --- File Upload Logic ---
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please upload a valid PDF file.');
+                return;
+            }
+            originalFileName = file.name;
+            fileBuffer = await file.arrayBuffer();
+            
+            fileDisplayName.textContent = originalFileName;
+            uploadState.style.display = 'none';
+            unlockInterface.style.display = 'block';
+        }
+
+        // --- Main Unlock Logic (pdf-lib) ---
+        unlockButton.addEventListener('click', async () => {
+            const password = passwordInput.value;
+            if (!password) {
+                alert("Please enter a password.");
+                return;
+            }
+
+            unlockInterface.style.display = 'none';
+            processingState.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const pdf = await PDFDocument.load(fileBuffer, { 
+                    // pdf-lib will try the password. If it's wrong, it will throw an error.
+                    userPassword: password 
+                });
+
+                // If we reach here, the password was correct. Now, save it without a password.
+                const newPdfBytes = await pdf.save();
+                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+                const downloadUrl = URL.createObjectURL(blob);
+
+                downloadButton.href = downloadUrl;
+                downloadButton.download = `unlocked-${originalFileName}`;
+                
+                processingState.style.display = 'none';
+                successState.style.display = 'block';
+
+            } catch (error) {
+                console.error("Unlocking failed:", error);
+                // This catch block is triggered for incorrect passwords.
+                processingState.style.display = 'none';
+                unlockInterface.style.display = 'block';
+                errorMessage.style.display = 'block';
+                passwordInput.value = ''; // Clear the wrong password
+            }
+        });
+        
+        // --- Reset Logic ---
+        startOverButton.addEventListener('click', resetTool);
+        
+        function resetTool() {
+            fileBuffer = null; originalFileName = '';
+            successState.style.display = 'none';
+            processingState.style.display = 'none';
+            unlockInterface.style.display = 'none';
+            uploadState.style.display = 'block';
+            fileInput.value = '';
+            passwordInput.value = '';
+            errorMessage.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
