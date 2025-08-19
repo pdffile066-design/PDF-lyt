@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Annotate your PDF files online for free. Add text, drawings, and notes to your documents with PDFlyt's easy-to-use annotation tool.">
-    <meta name="keywords" content="Annotate PDF, PDF Annotator, PDF Markup, Add text to PDF, Draw on PDF, PDFlyt">
-    
-    <title>Annotate PDF | PDFlyt - Add Text & Drawings to PDF Online</title>
-    
-    <!-- Favicon -->
+    <title>Professional PDF Annotator | PDFlyt</title>
+    <!-- SEO, Fonts, Icons -->
+    <meta name="description" content="A professional tool to annotate PDF files online. Add freehand drawings, highlights, text, and shapes. Secure, client-side, and easy to use by PDFlyt.">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- Fonts and Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Libraries -->
@@ -44,25 +39,24 @@
         .tool-icon-large { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2.5rem; margin: 0 auto 1.5rem; box-shadow: var(--shadow-lg); }
         .tool-title { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem; }
         .tool-description { font-size: 1.1rem; color: var(--gray-600); max-width: 650px; margin: 0 auto; }
-        .upload-area { border: 3px dashed var(--gray-200); border-radius: var(--border-radius); padding: 3rem 2rem; background-color: #F9FAFB; transition: var(--transition); cursor: pointer; }
+        .upload-area { border: 3px dashed var(--gray-200); border-radius: var(--border-radius); padding: 3rem 2rem; background-color: #F9FAFB; cursor: pointer; }
         #file-input { display: none; }
         
         #annotate-interface { display: none; }
         .toolbar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; padding: 1rem; background-color: var(--gray-50); border-radius: 12px; margin-bottom: 1.5rem; }
-        .tool-group { display: flex; align-items: center; gap: 0.5rem; }
-        .toolbar button { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
-        .toolbar button.active { background-color: var(--primary-color); color: white; border-color: var(--primary-dark); }
-        .toolbar input[type="color"] { width: 30px; height: 30px; border: none; padding: 0; background: none; border-radius: 50%; cursor: pointer; }
-        .toolbar input[type="range"], .toolbar input[type="number"] { max-width: 80px; }
+        .tool-group { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background-color: var(--white); border-radius: 8px; box-shadow: var(--shadow-lg); }
+        .toolbar button { background: none; border: none; padding: 0.5rem; cursor: pointer; border-radius: 6px; width: 40px; height: 40px; font-size: 1.1rem; color: var(--gray-600); }
+        .toolbar button.active { background-color: var(--primary-color); color: white; }
         
-        #preview-container { position: relative; width: 100%; max-width: 800px; margin: auto; border: 1px solid var(--gray-200); user-select: none; }
+        #preview-container { position: relative; width: 100%; max-width: 800px; margin: auto; border: 1px solid var(--gray-200); }
         #pdf-canvas { width: 100%; height: auto; display: block; }
         #annotation-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #text-input { display: none; position: absolute; border: 1px dashed var(--primary-color); background: rgba(255,255,255,0.8); font-family: 'Inter', sans-serif; padding: 2px; resize: none; overflow: hidden; }
         
         #page-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
         #page-controls button { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
         
-        .action-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: var(--white); padding: 1rem 2.5rem; border-radius: 14px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-lg); margin-top: 2rem; }
+        .action-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: var(--white); padding: 1rem 2.5rem; border-radius: 14px; border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-lg); margin-top: 2rem; }
         .processing-state, .success-state { display: none; padding: 3rem 0; }
         .spinner { width: 50px; height: 50px; border: 5px solid var(--gray-200); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -70,8 +64,6 @@
         .download-button { background: var(--success-color); font-size: 1.1rem; padding: 1rem 2.5rem; border-radius: 14px; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
         .start-over-button { background: none; border: 2px solid var(--gray-200); color: var(--gray-800); margin-left: 1rem; }
         
-        .about-tool { padding: 4rem 2rem; background: linear-gradient(to bottom, var(--white), var(--gray-50)); margin-top: 4rem; }
-        .about-tool-content { max-width: 800px; margin: 0 auto; text-align: left; }
         .footer { background: #0F172A; color: white; padding: 5rem 2rem 1rem; text-align: center; }
     </style>
 </head>
@@ -94,46 +86,18 @@
             <div id="upload-state">
                 <div class="tool-header">
                     <div class="tool-icon-large"><i class="fas fa-pen-nib"></i></div>
-                    <h1 class="tool-title">Annotate PDF</h1>
-                    <p class="tool-description">Add your own text and freehand drawings to any PDF document. Perfect for filling forms, adding notes, and signing.</p>
+                    <h1 class="tool-title">Professional PDF Annotator</h1>
+                    <p class="tool-description">Draw, highlight, add text, and shapes to your PDF. A complete professional markup tool that works in your browser.</p>
                 </div>
                 <div class="upload-area" id="upload-area">
                     <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>Drag & Drop a PDF Here</h3>
-                    <p>or <span style="color:var(--primary-color); font-weight: 600;">Browse File</span></p>
+                    <h3>Drag & Drop a PDF Here</h3><p>or <span style="color:var(--primary-color);font-weight:600;">Browse File</span></p>
                     <input type="file" id="file-input" accept=".pdf">
                 </div>
             </div>
 
             <div id="annotate-interface">
-                <div class="toolbar">
-                    <div class="tool-group">
-                        <button id="draw-tool" class="active"><i class="fas fa-pencil-alt"></i> Draw</button>
-                        <button id="text-tool"><i class="fas fa-font"></i> Text</button>
-                    </div>
-                    <div class="tool-group">
-                        <label>Color:</label> <input type="color" id="color-picker" value="#ff0000">
-                    </div>
-                    <div class="tool-group" id="draw-options">
-                        <label>Size:</label> <input type="range" id="line-width" min="1" max="50" value="5">
-                    </div>
-                    <div class="tool-group" id="text-options" style="display: none;">
-                        <label>Size:</label> <input type="number" id="font-size" min="8" max="100" value="16">
-                    </div>
-                    <div class="tool-group">
-                         <button id="undo-btn"><i class="fas fa-undo"></i> Undo</button>
-                    </div>
-                </div>
-                <div id="preview-container">
-                    <canvas id="pdf-canvas"></canvas>
-                    <canvas id="annotation-canvas"></canvas>
-                </div>
-                <div id="page-controls">
-                    <button id="prev-page"><i class="fas fa-arrow-left"></i> Prev</button>
-                    <span id="page-indicator">Page 1 / 1</span>
-                    <button id="next-page">Next <i class="fas fa-arrow-right"></i></button>
-                </div>
-                <button class="action-button" id="apply-button"><i class="fas fa-magic"></i> Apply Annotations</button>
+                <!-- This will be populated by JavaScript -->
             </div>
 
             <div class="processing-state" id="processing-state">
@@ -148,37 +112,63 @@
         </div>
     </main>
     
-    <section class="about-tool"> <!-- About Section --> </section>
     <footer class="footer"><p>&copy; 2024 PDFlyt. All rights reserved.</p></footer>
 
     <script>
-        // DOM Elements
         const uploadState = document.getElementById('upload-state');
         const annotateInterface = document.getElementById('annotate-interface');
         const processingState = document.getElementById('processing-state');
         const successState = document.getElementById('success-state');
-        const pdfCanvas = document.getElementById('pdf-canvas');
-        const annotationCanvas = document.getElementById('annotation-canvas');
-        const atx = annotationCanvas.getContext('2d');
-        const downloadButton = document.getElementById('download-button');
-        const startOverButton = document.getElementById('start-over-button');
         const fileInput = document.getElementById('file-input');
-
-        let pdfDoc = null, pageNum = 1, fileBuffer = null, originalFileName = '';
-        let annotations = {};
-        let activeTool = 'draw';
-        let isDrawing = false;
-        let toolSettings = { color: '#ff0000', lineWidth: 5, fontSize: 16 };
-
-        // --- File Upload ---
-        document.getElementById('upload-area').addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        const uploadArea = document.getElementById('upload-area');
         
+        let pdfDoc = null, pageNum = 1, fileBuffer = null, originalFileName = '';
+        let annotations = {}, undoStack = {};
+        let activeTool = 'pen', isDrawing = false, startPos = {}, currentAnnotation = null;
+        let toolSettings = { color: '#EF4444', size: 5 };
+
+        // --- File Upload Logic ---
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
         async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') { alert('Please upload a valid PDF file.'); return; }
             originalFileName = file.name;
             fileBuffer = await file.arrayBuffer();
             uploadState.style.display = 'none';
+            annotateInterface.innerHTML = `
+                <div class="toolbar">
+                    <div class="tool-group">
+                        <button id="pen-tool" title="Pen" class="active"><i class="fas fa-pencil-alt"></i></button>
+                        <button id="highlighter-tool" title="Highlighter"><i class="fas fa-highlighter"></i></button>
+                        <button id="text-tool" title="Text"><i class="fas fa-font"></i></button>
+                        <button id="rect-tool" title="Rectangle"><i class="far fa-square"></i></button>
+                    </div>
+                    <div class="tool-group">
+                        <input type="color" id="color-picker" title="Color" value="#EF4444">
+                        <input type="range" id="size-slider" title="Size/Thickness" min="1" max="50" value="5">
+                    </div>
+                    <div class="tool-group">
+                         <button id="undo-btn" title="Undo"><i class="fas fa-undo"></i></button>
+                    </div>
+                </div>
+                <div id="preview-container">
+                    <canvas id="pdf-canvas"></canvas>
+                    <canvas id="annotation-canvas"></canvas>
+                    <textarea id="text-input"></textarea>
+                </div>
+                <div id="page-controls">
+                    <button id="prev-page"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <span id="page-indicator">Page 1 / 1</span>
+                    <button id="next-page">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+                <button class="action-button" id="apply-button"><i class="fas fa-magic"></i> Apply & Download</button>
+            `;
             annotateInterface.style.display = 'block';
+            setupEventListeners();
             loadPdf(fileBuffer);
         }
 
@@ -193,160 +183,183 @@
         async function renderPage(num) {
             const page = await pdfDoc.getPage(num);
             const viewport = page.getViewport({ scale: 1.5 });
-            
+            const pdfCanvas = document.getElementById('pdf-canvas');
+            const annotationCanvas = document.getElementById('annotation-canvas');
             const context = pdfCanvas.getContext('2d');
-            pdfCanvas.height = viewport.height;
-            pdfCanvas.width = viewport.width;
-            annotationCanvas.height = viewport.height;
-            annotationCanvas.width = viewport.width;
-
+            pdfCanvas.height = viewport.height; pdfCanvas.width = viewport.width;
+            annotationCanvas.height = viewport.height; annotationCanvas.width = viewport.width;
             await page.render({ canvasContext: context, viewport }).promise;
             document.getElementById('page-indicator').textContent = `Page ${num} / ${pdfDoc.numPages}`;
             redrawCanvas();
         }
-        
-        // --- Toolbar & Drawing Logic (Same as before) ---
-        document.getElementById('draw-tool').addEventListener('click', () => switchTool('draw'));
-        document.getElementById('text-tool').addEventListener('click', () => switchTool('text'));
-        document.getElementById('color-picker').addEventListener('change', (e) => toolSettings.color = e.target.value);
-        document.getElementById('line-width').addEventListener('input', (e) => toolSettings.lineWidth = e.target.value);
-        document.getElementById('font-size').addEventListener('input', (e) => toolSettings.fontSize = e.target.value);
-        
+
+        function setupEventListeners() {
+            const annotationCanvas = document.getElementById('annotation-canvas');
+            annotationCanvas.addEventListener('mousedown', startDrawing);
+            annotationCanvas.addEventListener('mousemove', draw);
+            annotationCanvas.addEventListener('mouseup', stopDrawing);
+            annotationCanvas.addEventListener('dblclick', handleDoubleClick);
+
+            document.getElementById('pen-tool').addEventListener('click', () => switchTool('pen'));
+            document.getElementById('highlighter-tool').addEventListener('click', () => switchTool('highlighter'));
+            document.getElementById('text-tool').addEventListener('click', () => switchTool('text'));
+            document.getElementById('rect-tool').addEventListener('click', () => switchTool('rect'));
+            document.getElementById('undo-btn').addEventListener('click', undo);
+            document.getElementById('color-picker').addEventListener('input', e => toolSettings.color = e.target.value);
+            document.getElementById('size-slider').addEventListener('input', e => toolSettings.size = e.target.value);
+            
+            document.getElementById('prev-page').addEventListener('click', () => { if (pageNum > 1) { pageNum--; renderPage(pageNum); } });
+            document.getElementById('next-page').addEventListener('click', () => { if (pageNum < pdfDoc.numPages) { pageNum++; renderPage(pageNum); } });
+            
+            document.getElementById('apply-button').addEventListener('click', applyAnnotations);
+            document.getElementById('start-over-button').addEventListener('click', resetTool);
+        }
+
         function switchTool(tool) {
             activeTool = tool;
-            document.getElementById('draw-tool').classList.toggle('active', tool === 'draw');
-            document.getElementById('text-tool').classList.toggle('active', tool === 'text');
-            document.getElementById('draw-options').style.display = tool === 'draw' ? 'flex' : 'none';
-            document.getElementById('text-options').style.display = tool === 'text' ? 'flex' : 'none';
-            annotationCanvas.style.cursor = tool === 'draw' ? 'crosshair' : 'text';
+            document.querySelectorAll('.toolbar button[id$="-tool"]').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`${tool}-tool`).classList.add('active');
+            document.getElementById('annotation-canvas').style.cursor = tool === 'text' ? 'text' : 'crosshair';
         }
 
-        annotationCanvas.addEventListener('mousedown', (e) => {
-            if (activeTool === 'draw') {
-                isDrawing = true;
-                const { x, y } = getCanvasCoords(e);
-                annotations[pageNum] = annotations[pageNum] || [];
-                annotations[pageNum].push({ type: 'draw', path: [{ x, y }], ...toolSettings });
+        function startDrawing(e) {
+            startPos = getCanvasCoords(e); isDrawing = true; saveUndoState();
+            const newAnnotation = { type: activeTool, ...toolSettings };
+            if (activeTool === 'pen' || activeTool === 'highlighter') {
+                newAnnotation.path = [startPos];
+            } else if (activeTool === 'rect') {
+                newAnnotation.x = startPos.x; newAnnotation.y = startPos.y;
+                newAnnotation.width = 0; newAnnotation.height = 0;
             }
-        });
+            currentAnnotation = newAnnotation;
+            addAnnotation(currentAnnotation);
+        }
 
-        annotationCanvas.addEventListener('mousemove', (e) => {
-            if (isDrawing && activeTool === 'draw') {
-                const { x, y } = getCanvasCoords(e);
-                const currentPath = annotations[pageNum][annotations[pageNum].length - 1].path;
-                currentPath.push({ x, y });
-                redrawCanvas();
-            }
-        });
+        function draw(e) {
+            if (!isDrawing) return;
+            const currentPos = getCanvasCoords(e);
+            if (activeTool === 'pen' || activeTool === 'highlighter') currentAnnotation.path.push(currentPos);
+            else if (activeTool === 'rect') { currentAnnotation.width = currentPos.x - startPos.x; currentAnnotation.height = currentPos.y - startPos.y; }
+            redrawCanvas();
+        }
 
-        annotationCanvas.addEventListener('mouseup', () => { isDrawing = false; });
+        function stopDrawing() { isDrawing = false; currentAnnotation = null; }
 
-        annotationCanvas.addEventListener('click', (e) => {
-            if (activeTool === 'text') {
-                const text = prompt("Enter your text:");
-                if (text) {
-                    const { x, y } = getCanvasCoords(e);
-                    annotations[pageNum] = annotations[pageNum] || [];
-                    annotations[pageNum].push({ type: 'text', text, x, y, ...toolSettings });
+        function handleDoubleClick(e) {
+            if (activeTool !== 'text') return;
+            const pos = getCanvasCoords(e);
+            const textInput = document.getElementById('text-input');
+            textInput.style.display = 'block';
+            textInput.style.left = `${pos.x}px`; textInput.style.top = `${pos.y}px`;
+            textInput.style.color = toolSettings.color; textInput.style.fontSize = `${toolSettings.size * 1.5}px`;
+            textInput.focus(); textInput.value = '';
+            const onBlur = () => {
+                if (textInput.value.trim() !== '') {
+                    saveUndoState();
+                    addAnnotation({ type: 'text', text: textInput.value, x: pos.x, y: pos.y, ...toolSettings });
                     redrawCanvas();
                 }
-            }
-        });
-        
-        document.getElementById('undo-btn').addEventListener('click', () => {
-            if(annotations[pageNum] && annotations[pageNum].length > 0) {
-                annotations[pageNum].pop();
+                textInput.style.display = 'none'; textInput.removeEventListener('blur', onBlur);
+            };
+            textInput.addEventListener('blur', onBlur);
+        }
+
+        function addAnnotation(anno) {
+            if (!annotations[pageNum]) annotations[pageNum] = [];
+            annotations[pageNum].push(anno);
+        }
+
+        function saveUndoState() {
+            if (!undoStack[pageNum]) undoStack[pageNum] = [];
+            undoStack[pageNum].push(JSON.stringify(annotations[pageNum] || []));
+        }
+
+        function undo() {
+            if (undoStack[pageNum] && undoStack[pageNum].length > 0) {
+                annotations[pageNum] = JSON.parse(undoStack[pageNum].pop());
                 redrawCanvas();
             }
-        });
+        }
 
-        function getCanvasCoords(e) { /* Same as before */ return { x: e.clientX - annotationCanvas.getBoundingClientRect().left, y: e.clientY - annotationCanvas.getBoundingClientRect().top }; }
         function redrawCanvas() {
-            atx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
+            const atx = document.getElementById('annotation-canvas').getContext('2d');
+            atx.clearRect(0, 0, atx.canvas.width, atx.canvas.height);
             const pageAnnotations = annotations[pageNum] || [];
             pageAnnotations.forEach(ann => {
-                if (ann.type === 'draw') {
-                    atx.strokeStyle = ann.color;
-                    atx.lineWidth = ann.lineWidth; atx.lineCap = 'round'; atx.lineJoin = 'round';
-                    atx.beginPath();
-                    atx.moveTo(ann.path[0].x, ann.path[0].y);
-                    for (let i = 1; i < ann.path.length; i++) atx.lineTo(ann.path[i].x, ann.path[i].y);
-                    atx.stroke();
+                atx.strokeStyle = ann.color; atx.fillStyle = ann.color;
+                if (ann.type === 'pen' || ann.type === 'highlighter') {
+                    atx.globalAlpha = ann.type === 'highlighter' ? 0.3 : 1;
+                    atx.globalCompositeOperation = ann.type === 'highlighter' ? 'multiply' : 'source-over';
+                    atx.lineWidth = ann.type === 'highlighter' ? ann.size * 2 : ann.size;
+                    atx.lineCap = 'round'; atx.lineJoin = 'round'; atx.beginPath();
+                    if(ann.path.length > 0) {
+                        atx.moveTo(ann.path[0].x, ann.path[0].y);
+                        ann.path.forEach(p => atx.lineTo(p.x, p.y));
+                        atx.stroke();
+                    }
+                } else if (ann.type === 'rect') {
+                    atx.globalAlpha = 1; atx.globalCompositeOperation = 'source-over';
+                    atx.lineWidth = ann.size; atx.strokeRect(ann.x, ann.y, ann.width, ann.height);
                 } else if (ann.type === 'text') {
-                    atx.fillStyle = ann.color;
-                    atx.font = `${ann.fontSize}px Inter`;
-                    atx.fillText(ann.text, ann.x, ann.y);
+                    atx.globalAlpha = 1; atx.globalCompositeOperation = 'source-over';
+                    atx.font = `${ann.size * 1.5}px Inter`; atx.fillText(ann.text, ann.x, ann.y);
                 }
             });
+            atx.globalAlpha = 1; atx.globalCompositeOperation = 'source-over';
         }
-        
-        // --- Page Navigation ---
-        document.getElementById('prev-page').addEventListener('click', () => { if (pageNum > 1) { pageNum--; renderPage(pageNum); } });
-        document.getElementById('next-page').addEventListener('click', () => { if (pageNum < pdfDoc.numPages) { pageNum++; renderPage(pageNum); } });
 
-        // --- !! FULLY WORKING APPLY & DOWNLOAD LOGIC !! ---
-        document.getElementById('apply-button').addEventListener('click', async () => {
+        function getCanvasCoords(e) {
+            const rect = document.getElementById('annotation-canvas').getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        async function applyAnnotations() {
             annotateInterface.style.display = 'none';
             processingState.style.display = 'block';
-
             try {
-                const { PDFDocument, rgb, StandardFonts, LineCapStyle } = PDFLib;
-                const pdf = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+                const { PDFDocument, rgb, StandardFonts, LineCapStyle, BlendMode } = PDFLib;
+                const pdf = await PDFDocument.load(fileBuffer);
                 const font = await pdf.embedFont(StandardFonts.Helvetica);
-
+                const pdfCanvas = document.getElementById('pdf-canvas');
                 for (const pageNumStr in annotations) {
                     const pageNum = parseInt(pageNumStr);
                     const page = pdf.getPage(pageNum - 1);
-                    const pageAnnos = annotations[pageNum];
                     const { width: origWidth, height: origHeight } = page.getSize();
-                    const scaleX = origWidth / annotationCanvas.width;
-                    const scaleY = origHeight / annotationCanvas.height;
-                    
-                    for (const anno of pageAnnos) {
-                        if (anno.type === 'draw' && anno.path.length > 1) {
-                            let path = `M ${anno.path[0].x * scaleX} ${origHeight - (anno.path[0].y * scaleY)}`;
-                            for (let i = 1; i < anno.path.length; i++) {
-                                path += ` L ${anno.path[i].x * scaleX} ${origHeight - (anno.path[i].y * scaleY)}`;
-                            }
-                            page.drawSvgPath(path, {
-                                borderColor: hexToRgb(anno.color),
-                                borderWidth: anno.lineWidth * scaleX,
-                                lineCap: LineCapStyle.Round
-                            });
-                        } else if (anno.type === 'text') {
-                            page.drawText(anno.text, {
-                                x: anno.x * scaleX,
-                                y: origHeight - (anno.y * scaleY) - (anno.fontSize * scaleY), // Adjust for text baseline
-                                font: font,
-                                size: anno.fontSize * scaleX,
-                                color: hexToRgb(anno.color),
-                            });
+                    const scaleX = origWidth / pdfCanvas.width; const scaleY = origHeight / pdfCanvas.height;
+                    for (const ann of annotations[pageNum]) {
+                        const color = hexToRgb(ann.color);
+                        if ((ann.type === 'pen' || ann.type === 'highlighter') && ann.path.length > 1) {
+                            const path = ann.path.map(p => `L ${p.x * scaleX} ${origHeight - (p.y * scaleY)}`).join(' ').replace('L', 'M');
+                            page.drawSvgPath(path, { borderColor: color, borderWidth: (ann.type === 'highlighter' ? ann.size * 2 : ann.size) * scaleX, borderOpacity: ann.type === 'highlighter' ? 0.3 : 1, borderLineCap: LineCapStyle.Round, blendMode: ann.type === 'highlighter' ? BlendMode.Multiply : BlendMode.Normal });
+                        } else if (ann.type === 'rect') {
+                            page.drawRectangle({ x: ann.x * scaleX, y: origHeight - (ann.y + ann.height) * scaleY, width: ann.width * scaleX, height: ann.height * scaleY, borderColor: color, borderWidth: ann.size * scaleX });
+                        } else if (ann.type === 'text') {
+                            page.drawText(ann.text, { x: ann.x * scaleX, y: origHeight - (ann.y * scaleY) - (ann.size * 1.5 * scaleY * 0.8), font, size: ann.size * 1.5 * scaleX, color });
                         }
                     }
                 }
-
                 const newPdfBytes = await pdf.save();
                 const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
                 const downloadUrl = URL.createObjectURL(blob);
                 
+                const downloadButton = document.getElementById('download-button');
                 downloadButton.href = downloadUrl;
                 downloadButton.download = `annotated-${originalFileName}`;
+                
                 processingState.style.display = 'none';
                 successState.style.display = 'block';
+            } catch (error) { console.error("Annotation failed:", error); alert('An error occurred. Please try again.'); resetTool(); }
+        }
 
-            } catch (error) {
-                console.error("Annotation failed:", error);
-                alert('An error occurred. Please try again.');
-                resetTool();
-            }
-        });
-        
-        function hexToRgb(hex) { /* Same as before */ const r = parseInt(hex.slice(1,3),16)/255; const g=parseInt(hex.slice(3,5),16)/255; const b=parseInt(hex.slice(5,7),16)/255; return rgb(r,g,b); }
-        
-        startOverButton.addEventListener('click', resetTool);
-        
+        function hexToRgb(hex) {
+            const r = parseInt(hex.slice(1, 3), 16) / 255;
+            const g = parseInt(hex.slice(3, 5), 16) / 255;
+            const b = parseInt(hex.slice(5, 7), 16) / 255;
+            return PDFLib.rgb(r, g, b); // CORRECTED: Use PDFLib.rgb directly
+        }
+
         function resetTool() {
-            pdfDoc = null; pageNum = 1; fileBuffer = null; annotations = {}; originalFileName = '';
+            pdfDoc = null; pageNum = 1; fileBuffer = null; annotations = {}; undoStack = {}; originalFileName = '';
             successState.style.display = 'none';
             processingState.style.display = 'none';
             annotateInterface.style.display = 'none';
