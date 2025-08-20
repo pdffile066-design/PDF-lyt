@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Securely flatten your PDF online. Merge form fields, annotations, and layers into a single, non-editable layer. Perfect for finalizing documents with PDFlyt.">
+    <meta name="keywords" content="Flatten PDF, PDF Flattener, Make PDF Read-Only, Lock PDF Form, Finalize PDF, PDFlyt">
+    
+    <title>Flatten PDF | PDFlyt - Make PDFs Secure & Read-Only</title>
+    
+    <!-- Favicon, Fonts, Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #6366F1; --primary-dark: #4F46E5; --success-color: #10B981; --danger-color: #EF4444;
+            --light-bg: #F8FAFC; --white: #FFFFFF; --gray-50: #F3F4F6; --gray-100: #E5E7EB; --gray-200: #D1D5DB;
+            --gray-600: #4B5563; --gray-800: #1F2937; --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25); --border-radius: 16px; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: var(--gray-800); }
+        .header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1.25rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.5rem; }
+        .logo-text { font-family: 'Poppins', sans-serif; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .nav-menu { display: flex; list-style: none; gap: 2.5rem; }
+        .nav-link { text-decoration: none; color: var(--gray-600); font-weight: 600; font-size: 0.95rem; }
+        .main-content { padding: 4rem 2rem; }
+        .tool-container { max-width: 900px; margin: 0 auto; background: var(--white); border-radius: var(--border-radius); box-shadow: var(--shadow-2xl); padding: 2.5rem; border: 1px solid var(--gray-100); text-align: center; }
+        .tool-header { margin-bottom: 2rem; }
+        .tool-icon-large { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2.5rem; margin: 0 auto 1.5rem; box-shadow: var(--shadow-lg); }
+        .tool-title { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem; }
+        .tool-description { font-size: 1.1rem; color: var(--gray-600); max-width: 650px; margin: 0 auto; }
+        .upload-area { border: 3px dashed var(--gray-200); border-radius: var(--border-radius); padding: 3rem 2rem; background-color: #F9FAFB; cursor: pointer; }
+        #file-input { display: none; }
+        
+        #flatten-interface { display: none; }
+        .file-display { display: flex; align-items: center; gap: 1rem; background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
+        .file-display i { font-size: 1.5rem; color: var(--primary-color); }
+        .file-display-name { font-weight: 600; flex-grow: 1; text-align: left; }
+        
+        .action-button { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: var(--white); padding: 1rem 2.5rem; border-radius: 14px; border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--shadow-lg); margin-top: 2rem; }
+        .processing-state, .success-state { display: none; padding: 3rem 0; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--gray-200); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success-icon { font-size: 4rem; color: var(--success-color); margin-bottom: 1.5rem; }
+        .download-button { background: var(--success-color); font-size: 1.1rem; padding: 1rem 2.5rem; border-radius: 14px; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+        .start-over-button { background: none; border: 2px solid var(--gray-200); color: var(--gray-800); margin-left: 1rem; }
+        
+        .about-tool { padding: 4rem 2rem; background: linear-gradient(to bottom, var(--white), var(--gray-50)); margin-top: 4rem; }
+        .about-tool-content { max-width: 800px; margin: 0 auto; text-align: left; }
+        .footer { background: #0F172A; color: white; padding: 5rem 2rem 1rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-file-pdf"></i></div>
+                <div><div class="logo-text">PDFlyt</div></div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#pdf-tools" class="nav-link">PDF Tools</a></li>
+                <li><a href="index.html#image-tools" class="nav-link">Image Tools</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="tool-container">
+            <div id="upload-state">
+                <div class="tool-header">
+                    <div class="tool-icon-large"><i class="fas fa-layer-group"></i></div>
+                    <h1 class="tool-title">Flatten PDF</h1>
+                    <p class="tool-description">Make your PDF read-only by flattening it. This merges all annotations and form fields into a single, secure layer.</p>
+                </div>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>Drag & Drop a PDF Here</h3><p>or <span style="color:var(--primary-color);font-weight:600;">Browse File</span></p>
+                    <input type="file" id="file-input" accept=".pdf">
+                </div>
+            </div>
+
+            <div id="flatten-interface">
+                <div class="file-display">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="file-display-name" id="file-display-name"></span>
+                </div>
+                <p>Your document is ready to be flattened. This will make all content non-editable.</p>
+                <button class="action-button" id="flatten-button">
+                    <i class="fas fa-magic"></i> Flatten PDF
+                </button>
+            </div>
+
+            <div class="processing-state" id="processing-state">
+                <div class="spinner"></div><h2 class="tool-title">Flattening PDF...</h2>
+            </div>
+            <div class="success-state" id="success-state">
+                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                <h2 class="tool-title">PDF Flattened Successfully!</h2>
+                <a href="#" class="download-button" id="download-button" download="flattened.pdf"><i class="fas fa-download"></i> Download Flattened PDF</a>
+                <button class="action-button start-over-button" id="start-over-button"><i class="fas fa-redo"></i> Start Over</button>
+            </div>
+        </div>
+    </main>
+    
+    <section class="about-tool">
+        <div class="about-tool-content">
+            <h2>About the Flatten PDF Tool</h2>
+            <h3>What Does "Flatten PDF" Mean?</h3>
+            <p>Flattening a PDF means taking all the separate elements of the document—like text, images, form fields, and annotations—and merging them into a single, static layer. Imagine gluing all the pictures and sticky notes onto a piece of paper; once it's done, you can't move them anymore. That's what flattening does for a PDF.</p>
+            <ul>
+                <li><strong>Security:</strong> It prevents others from editing form fields or removing your annotations and signatures.</li>
+                <li><strong>Compatibility:</strong> A flattened PDF will look and print exactly the same across all devices and PDF viewers, avoiding issues with complex layers.</li>
+                <li><strong>Finalizing Documents:</strong> It's the perfect final step before sharing a contract, a filled form, or an annotated document.</li>
+            </ul>
+        </div>
+    </section>
+    
+    <footer class="footer"><p>&copy; 2024 PDFlyt. All rights reserved.</p></footer>
+
+    <script>
+        const uploadState = document.getElementById('upload-state');
+        const flattenInterface = document.getElementById('flatten-interface');
+        const processingState = document.getElementById('processing-state');
+        const successState = document.getElementById('success-state');
+        const fileInput = document.getElementById('file-input');
+        const uploadArea = document.getElementById('upload-area');
+        
+        let fileBuffer = null, originalFileName = '';
+
+        // --- File Upload Logic ---
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') { alert('Please upload a valid PDF file.'); return; }
+            originalFileName = file.name;
+            fileBuffer = await file.arrayBuffer();
+            
+            document.getElementById('file-display-name').textContent = originalFileName;
+            uploadState.style.display = 'none';
+            flattenInterface.style.display = 'block';
+
+            document.getElementById('flatten-button').addEventListener('click', applyFlatten);
+        }
+        
+        async function applyFlatten() {
+            flattenInterface.style.display = 'none';
+            processingState.style.display = 'block';
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const pdfDoc = await PDFDocument.load(fileBuffer);
+                const form = pdfDoc.getForm();
+                
+                // The magic function that does the work!
+                form.flatten();
+                
+                const newPdfBytes = await pdfDoc.save();
+                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+                const downloadUrl = URL.createObjectURL(blob);
+                
+                const downloadButton = document.getElementById('download-button');
+                downloadButton.href = downloadUrl;
+                downloadButton.download = `flattened-${originalFileName}`;
+                
+                processingState.style.display = 'none';
+                successState.style.display = 'block';
+            } catch (error) {
+                console.error("Flattening failed:", error);
+                alert('An error occurred. The PDF might not have any interactive elements to flatten.');
+                resetTool();
+            }
+        }
+        
+        document.getElementById('start-over-button').addEventListener('click', resetTool);
+        
+        function resetTool() {
+            fileBuffer = null; originalFileName = '';
+            successState.style.display = 'none';
+            processingState.style.display = 'none';
+            flattenInterface.style.display = 'none';
+            uploadState.style.display = 'block';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>
