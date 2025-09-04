@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fill PDF forms online with PDFlyt. Fast, secure, and easy-to-use PDF form filler with automatic field detection.">
+    <meta name="keywords" content="Fill PDF, PDF Form Filler, Complete PDF Forms, PDF Form Fields, Interactive PDF">
+    <meta name="author" content="PDFlyt">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Fill PDF | PDFlyt">
+    <meta property="og:description" content="Fill PDF forms electronically with PDFlyt's free online form filler.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pdflyt.com/fill-pdf">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fill PDF | PDFlyt">
+    <meta name="twitter:description" content="Fill PDF forms electronically with PDFlyt's free online form filler.">
+    
+    <title>Fill PDF | PDFlyt</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary-color: #8B5CF6;
+            --accent-color: #0EA5E9;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --gray-25: #F9FAFB;
+            --gray-50: #F3F4F6;
+            --gray-100: #E5E7EB;
+            --gray-200: #D1D5DB;
+            --gray-300: #9CA3AF;
+            --gray-400: #6B7280;
+            --gray-500: #4B5563;
+            --gray-600: #374151;
+            --gray-700: #1F2937;
+            --gray-800: #111827;
+            --gray-900: #030712;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--gray-50);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+        
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .logo:hover .logo-icon::before {
+            opacity: 1;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 500;
+            margin-top: -4px;
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 0.75rem 1.75rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.25);
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+        }
+        
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+        
+        /* Tool Page */
+        .tool-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 2.5rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 70%, transparent 100%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .tool-header .logo {
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--white);
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-content {
+            padding: 3.5rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 20px;
+            padding: 4.5rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            transition: var(--transition);
+            cursor: pointer;
+            background: var(--gray-25);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, rgba(139, 92, 246, 0.01) 50%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.02);
+        }
+        
+        .upload-area:hover::before {
+            opacity: 1;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 4.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.75rem;
+        }
+        
+        .upload-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-subtext {
+            color: var(--gray-500);
+            font-size: 1rem;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .file-info {
+            display: none;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--gray-25);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .file-item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .file-item-name {
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+        
+        .file-item-size {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .file-item-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .form-fields-section {
+            display: none;
+            margin-bottom: 2rem;
+        }
+        
+        .form-fields-container {
+            background: var(--gray-25);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .form-fields-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .field-group {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .field-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--gray-800);
+            font-size: 1rem;
+        }
+        
+        .field-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--gray-800);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .field-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .field-textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        .field-select {
+            cursor: pointer;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+        
+        .checkbox-group label {
+            font-weight: 500;
+            color: var(--gray-800);
+            cursor: pointer;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+        
+        .radio-item label {
+            font-weight: 500;
+            color: var(--gray-800);
+            cursor: pointer;
+        }
+        
+        .no-fields-message {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+        
+        .no-fields-icon {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4), 0 10px 10px -5px rgba(139, 92, 246, 0.3);
+        }
+        
+        .action-button:hover::before {
+            opacity: 1;
+        }
+        
+        .action-button:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        .processing-state, .success-state {
+            display: none;
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--gray-200);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .processing-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+        
+        .processing-description {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--gray-200);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .success-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+        
+        .success-description {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .download-button {
+            background: var(--success-color);
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-right: 1rem;
+        }
+        
+        .download-button:hover {
+            background: #0d9f6b;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4);
+        }
+        
+        .start-over-button {
+            background: var(--white);
+            color: var(--gray-800);
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: 2px solid var(--gray-300);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .start-over-button:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            transform: translateY(-3px);
+        }
+        
+        .features-section {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .features-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: var(--gray-25);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--gray-900) 0%, #0F172A 100%);
+            color: var(--white);
+            padding: 5rem 2rem 1rem;
+            margin-top: 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        .footer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3), 0 2px 4px -1px rgba(139, 92, 246, 0.2);
+        }
+        
+        .footer-logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--white), var(--gray-300));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.875rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+        
+        /* Mobile Responsive */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-700);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: var(--shadow-xl);
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .tool-title {
+                font-size: 2rem;
+            }
+            
+            .tool-content {
+                padding: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div>
+                    <div class="logo-text">PDFlyt</div>
+                    <div class="logo-tagline">MODERN PDF TOOLS</div>
+                </div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#pdf-tools" class="nav-link">PDF Tools</a></li>
+                <li><a href="index.html#image-tools" class="nav-link">Image Tools</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="#" class="cta-button">Get Started</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="tool-page">
+            <div class="tool-header">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div>
+                        <div class="logo-text">PDFlyt</div>
+                        <div class="logo-tagline">MODERN PDF TOOLS</div>
+                    </div>
+                </a>
+                <h1 class="tool-title">Fill PDF</h1>
+                <p class="tool-description">Fill out PDF forms electronically with our intelligent form detection. Upload any PDF form, and we'll automatically detect all fillable fields for you to complete.</p>
+            </div>
+            
+            <div class="tool-content">
+                <!-- Upload Section -->
+                <div id="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="upload-text">Drop your PDF form here or click to browse</h3>
+                        <p class="upload-subtext">Supports PDF forms with text fields, checkboxes, radio buttons, dropdowns, and more</p>
+                        <input type="file" id="file-input" accept=".pdf">
+                    </div>
+                </div>
+                
+                <!-- File Info -->
+                <div class="file-info" id="file-info">
+                    <div class="file-item">
+                        <div class="file-item-info">
+                            <div class="file-item-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="file-item-name" id="file-name">form.pdf</div>
+                        </div>
+                        <div class="file-item-size" id="file-size">2.5 MB</div>
+                        <button class="file-item-remove" id="remove-file">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Form Fields Section -->
+                <div class="form-fields-section" id="form-fields-section">
+                    <div class="form-fields-container">
+                        <h3 class="form-fields-title">Form Fields</h3>
+                        <div id="form-fields-container">
+                            <!-- Form fields will be dynamically inserted here -->
+                        </div>
+                        <button class="action-button" id="fill-form-button">
+                            <i class="fas fa-file-check"></i> Fill PDF Form
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Processing State -->
+                <div class="processing-state" id="processing-state">
+                    <div class="spinner"></div>
+                    <h2 class="processing-title">Filling PDF Form...</h2>
+                    <p class="processing-description">Please wait while we process your form and apply the filled values.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <!-- Success State -->
+                <div class="success-state" id="success-state">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="success-title">PDF Form Filled Successfully!</h2>
+                    <p class="success-description" id="success-description">Your PDF form has been completed and is ready for download.</p>
+                    <button class="download-button" id="download-button">
+                        <i class="fas fa-download"></i> Download Filled PDF
+                    </button>
+                    <button class="start-over-button" id="start-over-button">
+                        <i class="fas fa-redo"></i> Fill Another Form
+                    </button>
+                </div>
+                
+                <div class="features-section">
+                    <h3 class="features-title">Why Choose Our PDF Form Filler</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <div class="feature-title">Smart Detection</div>
+                            <div class="feature-description">Automatically detects all form fields in your PDF</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="feature-title">Multiple Field Types</div>
+                            <div class="feature-description">Supports text, checkboxes, radio buttons, dropdowns, and more</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="feature-title">Secure & Private</div>
+                            <div class="feature-description">All processing happens locally in your browser</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="feature-title">Fast Processing</div>
+                            <div class="feature-description">Fill forms instantly without waiting</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="index.html" class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="footer-logo-text">PDFlyt</div>
+                </a>
+                <p style="margin-top: 1.25rem; color: var(--gray-400);">Modern PDF form filling tools for today's digital workflow.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Tools</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#pdf-tools">PDF Tools</a></li>
+                    <li><a href="index.html#image-tools">Image Tools</a></li>
+                    <li><a href="#">Form Tools</a></li>
+                    <li><a href="#">All Features</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PDFlyt. All rights reserved. Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> for modern workflows.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // Fill PDF Logic
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const removeFile = document.getElementById('remove-file');
+        const formFieldsSection = document.getElementById('form-fields-section');
+        const formFieldsContainer = document.getElementById('form-fields-container');
+        const fillFormButton = document.getElementById('fill-form-button');
+        const processingState = document.getElementById('processing-state');
+        const successState = document.getElementById('success-state');
+        const progressFill = document.getElementById('progress-fill');
+        const successDescription = document.getElementById('success-description');
+        const downloadButton = document.getElementById('download-button');
+        const startOverButton = document.getElementById('start-over-button');
+        
+        let currentPdfBytes;
+        let currentPdfDoc;
+        let formFields = [];
+        let filledPdfBytes;
+        
+        // File upload handling
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            uploadArea.classList.add('dragover'); 
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { 
+            e.preventDefault(); 
+            uploadArea.classList.remove('dragover'); 
+            handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        removeFile.addEventListener('click', resetTool);
+        
+        async function handleFile(file) {
+            if (!file || file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file.');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size exceeds 10MB limit. Please select a smaller file.');
+                return;
+            }
+            
+            try {
+                // Show file info
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                uploadArea.style.display = 'none';
+                fileInfo.style.display = 'block';
+                
+                // Load PDF
+                const arrayBuffer = await file.arrayBuffer();
+                currentPdfBytes = arrayBuffer;
+                currentPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                
+                // Detect form fields
+                await detectFormFields();
+                
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                alert('Error loading PDF file. Please try again.');
+                resetTool();
+            }
+        }
+        
+        async function detectFormFields() {
+            try {
+                const form = currentPdfDoc.getForm();
+                const fields = form.getFields();
+                
+                formFields = [];
+                
+                if (fields.length === 0) {
+                    showNoFieldsMessage();
+                    return;
+                }
+                
+                // Process each field
+                for (const field of fields) {
+                    const fieldName = field.getName();
+                    const fieldType = getFieldType(field);
+                    
+                    formFields.push({
+                        name: fieldName,
+                        type: fieldType,
+                        field: field,
+                        value: getFieldValue(field, fieldType)
+                    });
+                }
+                
+                // Create form UI
+                createFormUI();
+                
+                // Show form fields section
+                formFieldsSection.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error detecting form fields:', error);
+                showNoFieldsMessage();
+            }
+        }
+        
+        function getFieldType(field) {
+            if (field instanceof PDFLib.PDFTextField) return 'text';
+            if (field instanceof PDFLib.PDFCheckBox) return 'checkbox';
+            if (field instanceof PDFLib.PDFRadioGroup) return 'radio';
+            if (field instanceof PDFLib.PDFDropdown) return 'dropdown';
+            if (field instanceof PDFLib.PDFOptionList) return 'optionlist';
+            if (field instanceof PDFLib.PDFButton) return 'button';
+            return 'unknown';
+        }
+        
+        function getFieldValue(field, fieldType) {
+            try {
+                switch (fieldType) {
+                    case 'text':
+                        return field.getText() || '';
+                    case 'checkbox':
+                        return field.isChecked();
+                    case 'radio':
+                        return field.getSelected() || '';
+                    case 'dropdown':
+                    case 'optionlist':
+                        return field.getSelected() || [];
+                    default:
+                        return null;
+                }
+            } catch (error) {
+                return null;
+            }
+        }
+        
+        function createFormUI() {
+            formFieldsContainer.innerHTML = '';
+            
+            formFields.forEach((fieldInfo, index) => {
+                const fieldGroup = document.createElement('div');
+                fieldGroup.className = 'field-group';
+                
+                const label = document.createElement('label');
+                label.className = 'field-label';
+                label.textContent = formatFieldName(fieldInfo.name);
+                fieldGroup.appendChild(label);
+                
+                let input;
+                
+                switch (fieldInfo.type) {
+                    case 'text':
+                        input = document.createElement('input');
+                        input.type = 'text';
+                        input.className = 'field-input';
+                        input.value = fieldInfo.value || '';
+                        input.placeholder = 'Enter text...';
+                        input.addEventListener('input', (e) => {
+                            fieldInfo.value = e.target.value;
+                        });
+                        break;
+                        
+                    case 'checkbox':
+                        const checkboxContainer = document.createElement('div');
+                        checkboxContainer.className = 'checkbox-group';
+                        
+                        input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.checked = fieldInfo.value || false;
+                        input.addEventListener('change', (e) => {
+                            fieldInfo.value = e.target.checked;
+                        });
+                        
+                        const checkboxLabel = document.createElement('label');
+                        checkboxLabel.textContent = 'Check this box';
+                        
+                        checkboxContainer.appendChild(input);
+                        checkboxContainer.appendChild(checkboxLabel);
+                        fieldGroup.appendChild(checkboxContainer);
+                        break;
+                        
+                    case 'radio':
+                        const radioContainer = document.createElement('div');
+                        radioContainer.className = 'radio-group';
+                        
+                        try {
+                            const options = fieldInfo.field.getOptions();
+                            options.forEach(option => {
+                                const radioItem = document.createElement('div');
+                                radioItem.className = 'radio-item';
+                                
+                                const radioInput = document.createElement('input');
+                                radioInput.type = 'radio';
+                                radioInput.name = `radio_${index}`;
+                                radioInput.value = option;
+                                radioInput.checked = fieldInfo.value === option;
+                                radioInput.addEventListener('change', (e) => {
+                                    if (e.target.checked) {
+                                        fieldInfo.value = option;
+                                    }
+                                });
+                                
+                                const radioLabel = document.createElement('label');
+                                radioLabel.textContent = formatFieldName(option);
+                                
+                                radioItem.appendChild(radioInput);
+                                radioItem.appendChild(radioLabel);
+                                radioContainer.appendChild(radioItem);
+                            });
+                        } catch (error) {
+                            const fallbackInput = document.createElement('input');
+                            fallbackInput.type = 'text';
+                            fallbackInput.className = 'field-input';
+                            fallbackInput.value = fieldInfo.value || '';
+                            fallbackInput.placeholder = 'Select option...';
+                            fallbackInput.addEventListener('input', (e) => {
+                                fieldInfo.value = e.target.value;
+                            });
+                            radioContainer.appendChild(fallbackInput);
+                        }
+                        
+                        fieldGroup.appendChild(radioContainer);
+                        break;
+                        
+                    case 'dropdown':
+                    case 'optionlist':
+                        input = document.createElement('select');
+                        input.className = 'field-input field-select';
+                        
+                        try {
+                            const options = fieldInfo.field.getOptions();
+                            const defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.textContent = 'Select an option...';
+                            input.appendChild(defaultOption);
+                            
+                            options.forEach(option => {
+                                const optionElement = document.createElement('option');
+                                optionElement.value = option;
+                                optionElement.textContent = formatFieldName(option);
+                                optionElement.selected = fieldInfo.value === option;
+                                input.appendChild(optionElement);
+                            });
+                        } catch (error) {
+                            const fallbackOption = document.createElement('option');
+                            fallbackOption.value = '';
+                            fallbackOption.textContent = 'Options not available';
+                            input.appendChild(fallbackOption);
+                        }
+                        
+                        input.addEventListener('change', (e) => {
+                            fieldInfo.value = e.target.value;
+                        });
+                        break;
+                        
+                    default:
+                        input = document.createElement('input');
+                        input.type = 'text';
+                        input.className = 'field-input';
+                        input.value = fieldInfo.value || '';
+                        input.placeholder = 'Field type not supported';
+                        input.disabled = true;
+                        break;
+                }
+                
+                if (input && fieldInfo.type !== 'checkbox' && fieldInfo.type !== 'radio') {
+                    fieldGroup.appendChild(input);
+                }
+                
+                formFieldsContainer.appendChild(fieldGroup);
+            });
+        }
+        
+        function showNoFieldsMessage() {
+            formFieldsContainer.innerHTML = `
+                <div class="no-fields-message">
+                    <div class="no-fields-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>No Form Fields Detected</h3>
+                    <p>This PDF doesn't contain any fillable form fields. Please upload a PDF form with interactive fields.</p>
+                </div>
+            `;
+            formFieldsSection.style.display = 'block';
+        }
+        
+        function formatFieldName(fieldName) {
+            return fieldName
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+                .replace(/[_\-.]/g, ' ')
+                .trim();
+        }
+        
+        // Fill form button handler
+        fillFormButton.addEventListener('click', async () => {
+            // Show processing state
+            formFieldsSection.style.display = 'none';
+            processingState.style.display = 'block';
+            
+            try {
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 20;
+                    progressFill.style.width = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, 200);
+                
+                // Apply form field values
+                const form = currentPdfDoc.getForm();
+                
+                formFields.forEach(fieldInfo => {
+                    try {
+                        switch (fieldInfo.type) {
+                            case 'text':
+                                const textField = form.getTextField(fieldInfo.name);
+                                textField.setText(fieldInfo.value || '');
+                                break;
+                                
+                            case 'checkbox':
+                                const checkBox = form.getCheckBox(fieldInfo.name);
+                                if (fieldInfo.value) {
+                                    checkBox.check();
+                                } else {
+                                    checkBox.uncheck();
+                                }
+                                break;
+                                
+                            case 'radio':
+                                const radioGroup = form.getRadioGroup(fieldInfo.name);
+                                if (fieldInfo.value) {
+                                    radioGroup.select(fieldInfo.value);
+                                }
+                                break;
+                                
+                            case 'dropdown':
+                                const dropdown = form.getDropdown(fieldInfo.name);
+                                if (fieldInfo.value) {
+                                    dropdown.select(fieldInfo.value);
+                                }
+                                break;
+                                
+                            case 'optionlist':
+                                const optionList = form.getOptionList(fieldInfo.name);
+                                if (fieldInfo.value) {
+                                    optionList.select(fieldInfo.value);
+                                }
+                                break;
+                        }
+                    } catch (error) {
+                        console.warn(`Error setting field ${fieldInfo.name}:`, error);
+                    }
+                });
+                
+                // Save filled PDF
+                filledPdfBytes = await currentPdfDoc.save();
+                
+                // Show success state
+                setTimeout(() => {
+                    processingState.style.display = 'none';
+                    successState.style.display = 'block';
+                    successDescription.textContent = `Your PDF form "${fileName.textContent}" has been filled successfully.`;
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error filling form:', error);
+                alert('Error filling PDF form. Please try again.');
+                resetTool();
+            }
+        });
+        
+        // Download filled PDF
+        downloadButton.addEventListener('click', () => {
+            if (filledPdfBytes) {
+                const blob = new Blob([filledPdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `filled_${fileName.textContent}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+        
+        // Reset tool
+        startOverButton.addEventListener('click', resetTool);
+        
+        function resetTool() {
+            // Reset all variables
+            currentPdfBytes = null;
+            currentPdfDoc = null;
+            formFields = [];
+            filledPdfBytes = null;
+            
+            // Reset UI
+            uploadArea.style.display = 'block';
+            fileInfo.style.display = 'none';
+            formFieldsSection.style.display = 'none';
+            processingState.style.display = 'none';
+            successState.style.display = 'none';
+            
+            // Reset form
+            fileInput.value = '';
+            progressFill.style.width = '0%';
+            formFieldsContainer.innerHTML = '';
+        }
+        
+        // Utility functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01)';
+            } else {
+                header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
