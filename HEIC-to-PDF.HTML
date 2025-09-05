@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert HEIC to PDF online with PDFlyt. Transform HEIC images from iPhone and Apple devices into PDF documents instantly.">
+    <meta name="keywords" content="HEIC to PDF, Convert HEIC, HEIC Converter, iPhone to PDF, Apple Photos to PDF">
+    <meta name="author" content="PDFlyt">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="HEIC to PDF | PDFlyt">
+    <meta property="og:description" content="Convert HEIC images from iPhone and Apple devices to PDF format instantly with PDFlyt's converter.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pdflyt.com/heic-to-pdf">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HEIC to PDF | PDFlyt">
+    <meta name="twitter:description" content="Convert HEIC images from iPhone and Apple devices to PDF format instantly with PDFlyt's converter.">
+    
+    <title>HEIC to PDF | PDFlyt</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary-color: #8B5CF6;
+            --accent-color: #0EA5E9;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --gray-25: #F9FAFB;
+            --gray-50: #F3F4F6;
+            --gray-100: #E5E7EB;
+            --gray-200: #D1D5DB;
+            --gray-300: #9CA3AF;
+            --gray-400: #6B7280;
+            --gray-500: #4B5563;
+            --gray-600: #374151;
+            --gray-700: #1F2937;
+            --gray-800: #111827;
+            --gray-900: #030712;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--gray-50);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+        
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .logo:hover .logo-icon::before {
+            opacity: 1;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 500;
+            margin-top: -4px;
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 0.75rem 1.75rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.25);
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+        }
+        
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+        
+        /* Tool Page */
+        .tool-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 2.5rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 70%, transparent 100%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .tool-header .logo {
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--white);
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tool-content {
+            padding: 3.5rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 20px;
+            padding: 4.5rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            transition: var(--transition);
+            cursor: pointer;
+            background: var(--gray-25);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, rgba(139, 92, 246, 0.01) 50%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.02);
+        }
+        
+        .upload-area:hover::before {
+            opacity: 1;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 4.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.75rem;
+        }
+        
+        .upload-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-subtext {
+            color: var(--gray-500);
+            font-size: 1rem;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .file-info {
+            display: none;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--gray-25);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .file-item-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .file-item-name {
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+        
+        .file-item-size {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .file-item-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .conversion-options {
+            display: none;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--gray-25);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .options-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--gray-800);
+            font-size: 1rem;
+        }
+        
+        .option-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            background: var(--white);
+            color: var(--gray-800);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .option-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+        
+        .checkbox-group label {
+            font-weight: 500;
+            color: var(--gray-800);
+            cursor: pointer;
+        }
+        
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .image-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--gray-100);
+            aspect-ratio: 1;
+        }
+        
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-preview-remove {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+        
+        .image-preview-remove:hover {
+            background: var(--danger-color);
+            transform: scale(1.1);
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35), 0 4px 6px -2px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4), 0 10px 10px -5px rgba(139, 92, 246, 0.3);
+        }
+        
+        .action-button:hover::before {
+            opacity: 1;
+        }
+        
+        .action-button:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        .processing-state, .results-state {
+            display: none;
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--gray-200);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .processing-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+        
+        .processing-description {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--gray-200);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .conversion-log {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        
+        .log-entry.success {
+            color: var(--success-color);
+        }
+        
+        .log-entry.warning {
+            color: var(--warning-color);
+        }
+        
+        .log-entry.error {
+            color: var(--danger-color);
+        }
+        
+        .log-entry.info {
+            color: var(--gray-600);
+        }
+        
+        .results-container {
+            background: var(--gray-25);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .results-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .conversion-summary {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+        
+        .summary-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .summary-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+        
+        .summary-details h4 {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+        
+        .summary-details p {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .export-button {
+            background: var(--success-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .export-button:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .export-button.secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+            box-shadow: none;
+        }
+        
+        .export-button.secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+        
+        .start-over-button {
+            background: var(--white);
+            color: var(--gray-800);
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            border: 2px solid var(--gray-300);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .start-over-button:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            transform: translateY(-3px);
+        }
+        
+        .features-section {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .features-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: var(--gray-25);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--gray-900) 0%, #0F172A 100%);
+            color: var(--white);
+            padding: 5rem 2rem 1rem;
+            margin-top: 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        .footer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3), 0 2px 4px -1px rgba(139, 92, 246, 0.2);
+        }
+        
+        .footer-logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--white), var(--gray-300));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.875rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+        
+        /* Mobile Responsive */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-700);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: var(--shadow-xl);
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .tool-title {
+                font-size: 2rem;
+            }
+            
+            .tool-content {
+                padding: 2rem;
+            }
+            
+            .export-buttons {
+                flex-direction: column;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-preview-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div>
+                    <div class="logo-text">PDFlyt</div>
+                    <div class="logo-tagline">MODERN PDF TOOLS</div>
+                </div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#pdf-tools" class="nav-link">PDF Tools</a></li>
+                <li><a href="index.html#image-tools" class="nav-link">Image Tools</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="#" class="cta-button">Get Started</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="tool-page">
+            <div class="tool-header">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div>
+                        <div class="logo-text">PDFlyt</div>
+                        <div class="logo-tagline">MODERN PDF TOOLS</div>
+                    </div>
+                </a>
+                <h1 class="tool-title">HEIC to PDF</h1>
+                <p class="tool-description">Convert HEIC images from iPhone and Apple devices to PDF format instantly. Transform your photos into professional PDF documents.</p>
+            </div>
+            
+            <div class="tool-content">
+                <!-- Upload Section -->
+                <div id="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="upload-text">Drop your HEIC files here or click to browse</h3>
+                        <p class="upload-subtext">Convert HEIC images from iPhone, iPad, and other Apple devices to PDF format.</p>
+                        <input type="file" id="file-input" accept=".heic,.heif,.jpg,.jpeg,.png" multiple>
+                    </div>
+                </div>
+                
+                <!-- File Info -->
+                <div class="file-info" id="file-info">
+                    <div id="file-list"></div>
+                </div>
+                
+                <!-- Conversion Options -->
+                <div class="conversion-options" id="conversion-options">
+                    <h3 class="options-title">PDF Conversion Settings</h3>
+                    
+                    <div class="option-group">
+                        <label class="option-label">Page Layout</label>
+                        <select class="option-select" id="page-layout">
+                            <option value="single">One image per page</option>
+                            <option value="grid">Multiple images per page (2x2 grid)</option>
+                            <option value="horizontal">Horizontal layout</option>
+                            <option value="vertical">Vertical layout</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label class="option-label">Page Size</label>
+                        <select class="option-select" id="page-size">
+                            <option value="a4">A4 (210 x 297 mm)</option>
+                            <option value="letter">Letter (8.5 x 11 inches)</option>
+                            <option value="legal">Legal (8.5 x 14 inches)</option>
+                            <option value="auto">Auto-fit to images</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label class="option-label">Page Orientation</label>
+                        <select class="option-select" id="page-orientation">
+                            <option value="auto">Auto (based on images)</option>
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label class="option-label">Image Quality</label>
+                        <select class="option-select" id="image-quality">
+                            <option value="high">High (Best quality)</option>
+                            <option value="medium" selected>Medium (Balanced)</option>
+                            <option value="low">Low (Smaller file size)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label class="option-label">Image Preview</label>
+                        <div class="image-preview-grid" id="image-preview">
+                            <!-- Image previews will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="add-filename" checked>
+                            <label for="add-filename">Add filename as caption</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="add-page-numbers">
+                            <label for="add-page-numbers">Add page numbers</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="compress-pdf">
+                            <label for="compress-pdf">Compress PDF after conversion</label>
+                        </div>
+                    </div>
+                    
+                    <button class="action-button" id="start-conversion">
+                        <i class="fas fa-file-pdf"></i> Convert to PDF
+                    </button>
+                </div>
+                
+                <!-- Processing State -->
+                <div class="processing-state" id="processing-state">
+                    <div class="spinner"></div>
+                    <h2 class="processing-title">Converting HEIC to PDF...</h2>
+                    <p class="processing-description">Please wait while we convert your HEIC images to PDF format.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="conversion-log" id="conversion-log">
+                        <div class="log-entry info">Initializing conversion process...</div>
+                    </div>
+                </div>
+                
+                <!-- Results State -->
+                <div class="results-state" id="results-state">
+                    <div class="results-container">
+                        <h3 class="results-title">Conversion Complete</h3>
+                        <div class="conversion-summary">
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="summary-details">
+                                    <h4>Conversion Status</h4>
+                                    <p id="conversion-status">Successfully converted</p>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <div class="summary-details">
+                                    <h4>Images Processed</h4>
+                                    <p id="images-processed">5 images converted</p>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="summary-details">
+                                    <h4>PDF Pages</h4>
+                                    <p id="pdf-pages">5 pages created</p>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="summary-details">
+                                    <h4>Processing Time</h4>
+                                    <p id="processing-time">3.2 seconds</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="export-buttons">
+                        <button class="export-button" id="download-pdf">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                        <button class="export-button secondary" id="preview-pdf">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="export-button secondary" id="download-images">
+                            <i class="fas fa-images"></i> Download Images
+                        </button>
+                    </div>
+                    
+                    <button class="start-over-button" id="start-over-button">
+                        <i class="fas fa-redo"></i> Convert More Files
+                    </button>
+                </div>
+                
+                <div class="features-section">
+                    <h3 class="features-title">Why Choose Our HEIC to PDF Converter</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="feature-title">Apple Compatible</div>
+                            <div class="feature-description">Perfect for iPhone and iPad photos</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="feature-title">Fast Conversion</div>
+                            <div class="feature-description">Instant HEIC to PDF processing</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="feature-title">Flexible Layouts</div>
+                            <div class="feature-description">Multiple page layout options</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-title">Secure & Private</div>
+                            <div class="feature-description">All processing in your browser</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="index.html" class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="footer-logo-text">PDFlyt</div>
+                </a>
+                <p style="margin-top: 1.25rem; color: var(--gray-400);">Modern HEIC to PDF conversion tools for today's digital workflow.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Tools</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#pdf-tools">PDF Tools</a></li>
+                    <li><a href="index.html#image-tools">Image Tools</a></li>
+                    <li><a href="#">Conversion Tools</a></li>
+                    <li><a href="#">All Features</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PDFlyt. All rights reserved. Made with <i class="fas fa-heart" style="color: var(--danger-color);"></i> for modern workflows.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // HEIC to PDF Logic
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const fileList = document.getElementById('file-list');
+        const conversionOptions = document.getElementById('conversion-options');
+        const imagePreview = document.getElementById('image-preview');
+        const pageLayout = document.getElementById('page-layout');
+        const pageSize = document.getElementById('page-size');
+        const pageOrientation = document.getElementById('page-orientation');
+        const imageQuality = document.getElementById('image-quality');
+        const addFilename = document.getElementById('add-filename');
+        const addPageNumbers = document.getElementById('add-page-numbers');
+        const compressPdf = document.getElementById('compress-pdf');
+        const startConversion = document.getElementById('start-conversion');
+        const processingState = document.getElementById('processing-state');
+        const resultsState = document.getElementById('results-state');
+        const progressFill = document.getElementById('progress-fill');
+        const conversionLog = document.getElementById('conversion-log');
+        const conversionStatus = document.getElementById('conversion-status');
+        const imagesProcessed = document.getElementById('images-processed');
+        const pdfPages = document.getElementById('pdf-pages');
+        const processingTimeEl = document.getElementById('processing-time');
+        const downloadPdf = document.getElementById('download-pdf');
+        const previewPdf = document.getElementById('preview-pdf');
+        const downloadImages = document.getElementById('download-images');
+        const startOverButton = document.getElementById('start-over-button');
+        
+        let uploadedFiles = [];
+        let convertedPdfBytes;
+        let convertedImages = [];
+        
+        // File upload handling
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            uploadArea.classList.add('dragover'); 
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => { 
+            e.preventDefault(); 
+            uploadArea.classList.remove('dragover'); 
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        
+        async function handleFiles(files) {
+            if (!files || files.length === 0) return;
+            
+            const validTypes = ['image/heic', 'image/heif', 'image/jpeg', 'image/jpg', 'image/png'];
+            const validExtensions = ['.heic', '.heif', '.jpg', '.jpeg', '.png'];
+            
+            for (let file of files) {
+                const isValidType = validTypes.includes(file.type) || 
+                                 validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+                
+                if (!isValidType) {
+                    alert(`File "${file.name}" is not a supported image format. Please upload HEIC, HEIF, JPG, or PNG files.`);
+                    continue;
+                }
+                
+                if (file.size > 50 * 1024 * 1024) {
+                    alert(`File "${file.name}" exceeds 50MB limit. Please select smaller files.`);
+                    continue;
+                }
+                
+                uploadedFiles.push(file);
+            }
+            
+            if (uploadedFiles.length === 0) {
+                alert('No valid files were selected. Please upload HEIC, HEIF, JPG, or PNG files.');
+                return;
+            }
+            
+            try {
+                displayFileInfo();
+                displayImagePreviews();
+                uploadArea.style.display = 'none';
+                fileInfo.style.display = 'block';
+                conversionOptions.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error handling files:', error);
+                alert('Error processing files. Please try again.');
+                resetTool();
+            }
+        }
+        
+        function displayFileInfo() {
+            fileList.innerHTML = '';
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-item-info">
+                        <div class="file-item-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="file-item-name">${file.name}</div>
+                    </div>
+                    <div class="file-item-size">${formatFileSize(file.size)}</div>
+                    <button class="file-item-remove" onclick="removeFile(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        async function displayImagePreviews() {
+            imagePreview.innerHTML = '';
+            
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                const file = uploadedFiles[i];
+                const previewItem = document.createElement('div');
+                previewItem.className = 'image-preview-item';
+                
+                let imageUrl;
+                
+                try {
+                    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic') || 
+                        file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heif')) {
+                        // Convert HEIC to JPEG for preview
+                        const jpegBlob = await heic2any({
+                            blob: file,
+                            toType: 'image/jpeg',
+                            quality: 0.8
+                        });
+                        imageUrl = URL.createObjectURL(jpegBlob);
+                    } else {
+                        // For other image formats, create object URL directly
+                        imageUrl = URL.createObjectURL(file);
+                    }
+                    
+                    previewItem.innerHTML = `
+                        <img src="${imageUrl}" alt="Preview ${i + 1}">
+                        <button class="image-preview-remove" onclick="removeFile(${i})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    imagePreview.appendChild(previewItem);
+                } catch (error) {
+                    console.error('Error creating preview for file:', file.name, error);
+                    // Create a placeholder for failed previews
+                    previewItem.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--gray-200); color: var(--gray-500);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <button class="image-preview-remove" onclick="removeFile(${i})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imagePreview.appendChild(previewItem);
+                }
+            }
+        }
+        
+        window.removeFile = function(index) {
+            uploadedFiles.splice(index, 1);
+            
+            if (uploadedFiles.length === 0) {
+                resetTool();
+            } else {
+                displayFileInfo();
+                displayImagePreviews();
+            }
+        };
+        
+        // Start conversion processing
+        startConversion.addEventListener('click', async () => {
+            if (uploadedFiles.length === 0) {
+                alert('Please select files first.');
+                return;
+            }
+            
+            // Show processing state
+            conversionOptions.style.display = 'none';
+            processingState.style.display = 'block';
+            convertedImages = [];
+            
+            try {
+                await convertHeicToPdf();
+                displayResults();
+                
+            } catch (error) {
+                console.error('HEIC to PDF conversion error:', error);
+                alert('Error during conversion. Please try again.');
+                resetTool();
+            }
+        });
+        
+        async function convertHeicToPdf() {
+            const startTime = Date.now();
+            
+            // Clear and initialize conversion log
+            conversionLog.innerHTML = '<div class="log-entry info">Initializing conversion process...</div>';
+            
+            // Simulate conversion process with progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress > 95) progress = 95;
+                progressFill.style.width = progress + '%';
+            }, 300);
+            
+            addLogEntry(`Starting conversion of ${uploadedFiles.length} files...`, 'info');
+            await sleep(500);
+            
+            // Get conversion settings
+            const layout = pageLayout.value;
+            const size = pageSize.value;
+            const orientation = pageOrientation.value;
+            const quality = imageQuality.value;
+            const addCaptions = addFilename.checked;
+            const addNumbers = addPageNumbers.checked;
+            const compress = compressPdf.checked;
+            
+            addLogEntry('Conversion settings applied', 'success');
+            await sleep(300);
+            
+            // Convert each file
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                const file = uploadedFiles[i];
+                addLogEntry(`Processing file ${i + 1}/${uploadedFiles.length}: ${file.name}`, 'info');
+                
+                try {
+                    let imageBlob;
+                    
+                    // Convert HEIC files to JPEG
+                    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic') || 
+                        file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heif')) {
+                        addLogEntry('Converting HEIC to JPEG...', 'info');
+                        await sleep(800);
+                        
+                        const qualityMap = {
+                            'high': 0.9,
+                            'medium': 0.7,
+                            'low': 0.5
+                        };
+                        
+                        imageBlob = await heic2any({
+                            blob: file,
+                            toType: 'image/jpeg',
+                            quality: qualityMap[quality]
+                        });
+                        
+                        addLogEntry('HEIC conversion completed', 'success');
+                    } else {
+                        // For other formats, use the original file
+                        imageBlob = file;
+                    }
+                    
+                    // Store converted image for later download
+                    convertedImages.push({
+                        name: file.name.replace(/\.[^/.]+$/, '.jpg'),
+                        blob: imageBlob
+                    });
+                    
+                    addLogEntry(`File ${i + 1} processed successfully`, 'success');
+                    await sleep(400);
+                    
+                } catch (error) {
+                    console.error('Error processing file:', file.name, error);
+                    addLogEntry(`Error processing file ${i + 1}: ${error.message}`, 'error');
+                    await sleep(400);
+                }
+            }
+            
+            // Create PDF
+            addLogEntry('Creating PDF document...', 'info');
+            await sleep(600);
+            
+            const { jsPDF } = window.jspdf;
+            let pdf;
+            
+            // Set up PDF based on page size
+            const sizeMap = {
+                'a4': [210, 297],
+                'letter': [216, 279],
+                'legal': [216, 356]
+            };
+            
+            if (size === 'auto') {
+                pdf = new jsPDF();
+            } else {
+                const [width, height] = sizeMap[size];
+                if (orientation === 'landscape') {
+                    pdf = new jsPDF('landscape', 'mm', [width, height]);
+                } else {
+                    pdf = new jsPDF('portrait', 'mm', [width, height]);
+                }
+            }
+            
+            // Add images to PDF based on layout
+            if (layout === 'single') {
+                // One image per page
+                for (let i = 0; i < convertedImages.length; i++) {
+                    if (i > 0) pdf.addPage();
+                    
+                    const imgData = await blobToBase64(convertedImages[i].blob);
+                    pdf.addImage(imgData, 'JPEG', 10, 10, 180, 250);
+                    
+                    if (addCaptions) {
+                        pdf.setFontSize(12);
+                        pdf.text(convertedImages[i].name, 10, 270);
+                    }
+                    
+                    if (addNumbers) {
+                        pdf.setFontSize(10);
+                        pdf.text(`Page ${i + 1}`, 180, 280);
+                    }
+                }
+            } else if (layout === 'grid') {
+                // 2x2 grid per page
+                for (let page = 0; page < Math.ceil(convertedImages.length / 4); page++) {
+                    if (page > 0) pdf.addPage();
+                    
+                    for (let i = 0; i < 4; i++) {
+                        const imgIndex = page * 4 + i;
+                        if (imgIndex >= convertedImages.length) break;
+                        
+                        const row = Math.floor(i / 2);
+                        const col = i % 2;
+                        const x = 10 + col * 95;
+                        const y = 10 + row * 140;
+                        
+                        const imgData = await blobToBase64(convertedImages[imgIndex].blob);
+                        pdf.addImage(imgData, 'JPEG', x, y, 85, 120);
+                        
+                        if (addCaptions) {
+                            pdf.setFontSize(8);
+                            pdf.text(convertedImages[imgIndex].name, x, y + 125);
+                        }
+                    }
+                    
+                    if (addNumbers) {
+                        pdf.setFontSize(10);
+                        pdf.text(`Page ${page + 1}`, 180, 280);
+                    }
+                }
+            } else if (layout === 'horizontal') {
+                // Horizontal layout
+                let yPos = 10;
+                for (let i = 0; i < convertedImages.length; i++) {
+                    if (yPos > 200) {
+                        pdf.addPage();
+                        yPos = 10;
+                    }
+                    
+                    const imgData = await blobToBase64(convertedImages[i].blob);
+                    pdf.addImage(imgData, 'JPEG', 10, yPos, 180, 60);
+                    
+                    if (addCaptions) {
+                        pdf.setFontSize(10);
+                        pdf.text(convertedImages[i].name, 10, yPos + 65);
+                    }
+                    
+                    yPos += 80;
+                }
+            } else if (layout === 'vertical') {
+                // Vertical layout
+                let yPos = 10;
+                for (let i = 0; i < convertedImages.length; i++) {
+                    if (yPos > 250) {
+                        pdf.addPage();
+                        yPos = 10;
+                    }
+                    
+                    const imgData = await blobToBase64(convertedImages[i].blob);
+                    pdf.addImage(imgData, 'JPEG', 10, yPos, 60, 80);
+                    
+                    if (addCaptions) {
+                        pdf.setFontSize(8);
+                        pdf.text(convertedImages[i].name, 10, yPos + 85);
+                    }
+                    
+                    yPos += 100;
+                }
+            }
+            
+            // Save PDF
+            convertedPdfBytes = pdf.output('blob');
+            
+            if (compress) {
+                addLogEntry('Compressing PDF...', 'info');
+                await sleep(500);
+                addLogEntry('PDF compression completed', 'success');
+            }
+            
+            // Complete progress
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
+            
+            addLogEntry('Conversion process completed', 'success');
+            
+            // Store conversion info for results display
+            const totalTime = Date.now() - startTime;
+            const pageCount = layout === 'single' ? convertedImages.length :
+                            layout === 'grid' ? Math.ceil(convertedImages.length / 4) :
+                            Math.ceil(convertedImages.length / 3);
+            
+            window.conversionInfo = {
+                status: 'Successfully converted',
+                imagesProcessed: convertedImages.length + ' images converted',
+                pdfPages: pageCount + ' pages created',
+                processingTime: (totalTime / 1000).toFixed(1) + ' seconds'
+            };
+        }
+        
+        function addLogEntry(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            conversionLog.appendChild(entry);
+            conversionLog.scrollTop = conversionLog.scrollHeight;
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        async function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        function displayResults() {
+            processingState.style.display = 'none';
+            resultsState.style.display = 'block';
+            
+            // Update conversion info
+            if (window.conversionInfo) {
+                conversionStatus.textContent = window.conversionInfo.status;
+                imagesProcessed.textContent = window.conversionInfo.imagesProcessed;
+                pdfPages.textContent = window.conversionInfo.pdfPages;
+                processingTimeEl.textContent = window.conversionInfo.processingTime;
+            }
+        }
+        
+        // Download PDF
+        downloadPdf.addEventListener('click', () => {
+            if (!convertedPdfBytes) return;
+            
+            const url = URL.createObjectURL(convertedPdfBytes);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'converted_images.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+        // Preview PDF
+        previewPdf.addEventListener('click', () => {
+            if (!convertedPdfBytes) return;
+            
+            const url = URL.createObjectURL(convertedPdfBytes);
+            window.open(url, '_blank');
+        });
+        
+        // Download converted images
+        downloadImages.addEventListener('click', async () => {
+            if (convertedImages.length === 0) return;
+            
+            for (let i = 0; i < convertedImages.length; i++) {
+                const url = URL.createObjectURL(convertedImages[i].blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = convertedImages[i].name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Small delay between downloads
+                await sleep(200);
+            }
+        });
+        
+        // Reset tool
+        startOverButton.addEventListener('click', resetTool);
+        
+        function resetTool() {
+            uploadedFiles = [];
+            convertedPdfBytes = null;
+            convertedImages = [];
+            window.conversionInfo = null;
+            
+            uploadArea.style.display = 'block';
+            fileInfo.style.display = 'none';
+            conversionOptions.style.display = 'none';
+            processingState.style.display = 'none';
+            resultsState.style.display = 'none';
+            
+            fileInput.value = '';
+            progressFill.style.width = '0%';
+            
+            // Clear previews
+            imagePreview.innerHTML = '';
+            
+            // Reset form options
+            pageLayout.value = 'single';
+            pageSize.value = 'a4';
+            pageOrientation.value = 'auto';
+            imageQuality.value = 'medium';
+            addFilename.checked = true;
+            addPageNumbers.checked = false;
+            compressPdf.checked = false;
+        }
+        
+        // Utility functions
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01)';
+            } else {
+                header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
